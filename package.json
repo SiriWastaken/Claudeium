@@ -1,0 +1,10 @@
+{
+  "name": "claudeium",
+  "version": "0.2.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "node --check core/ledger.js && node --check core/handoff.js && node --check scripts/stop-hook.js && node --check scripts/doctor.js && claude plugin validate ."
+  }
+}

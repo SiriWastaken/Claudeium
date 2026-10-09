@@ -1,0 +1,7 @@
+{
+  "name": "claudeium",
+  "version": "0.2.0",
+  "description": "Plan, delegate, verify: orchestrate multi-step work across scoped subagents with a durable ledger and evidence-gated completion.",
+  "license": "MIT",
+  "keywords": ["orchestration", "subagents", "verification"]
+}
