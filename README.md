@@ -9,7 +9,7 @@ Today it ships as a Claude Code plugin on top of a small platform-independent co
 | Capability | What exists |
 |---|---|
 | Evidence-based completion | A ledger where a task is `verified` only after a recorded passed check; `blocked`/`not_run` never count; evidence is bound to a file fingerprint so later edits show `STALE`. |
-| Reliable handoffs | `handoff` emits a versioned, validated snapshot another agent can resume from. |
+| Reliable handoffs | `handoff` emits a versioned, validated snapshot another agent can resume from (`resume` imports it; verification must be redone). |
 | Safe parallelism | Tasks declare owned files; parallel batches (≤3) must be file-disjoint. |
 | Capability awareness | `/claudeium:doctor` reports node, git, Ponytail; docs define fallbacks. |
 | Portability | Core is Node-stdlib-only and agent-agnostic; Claude Code is the first adapter. |
@@ -78,7 +78,7 @@ Optional. Ponytail has no API; its own hook injects its rules into subagents, so
 - *Blocked from finishing with "unfinished tasks"*: verify them, `fail`/`block` them with a reason, or `node core/ledger.js close`.
 - *`an open ledger exists`*: `close` it, or `init --force`.
 - *`ledger is corrupt`*: inspect or delete `.claudeium/ledger.json`; Claudeium will not overwrite it.
-- *Verifier agents report `blocked` (no Bash permission)*: allow Bash for them in your Claude Code permissions; otherwise tasks are marked `verified, not independent`.
+- *Verifier agents report `blocked` (Bash permission denied)*: seen in a headless run. Plugin agents can't set their own permission mode; approve the prompt in an interactive session, or add the verify commands to `permissions.allow` in your settings. Otherwise tasks end up `verified, not independent`. Details: [docs/verification.md](docs/verification.md#independence).
 - *A task shows `STALE`*: its owned files changed after verification; re-verify.
 
 ## Limitations

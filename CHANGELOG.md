@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- `resume <handoff.json>`: import a handoff into a fresh ledger (verified → done, running → pending).
+- Documented the plugin-agent permission limit (verifier Bash) in verification, security, README and `doctor`.
 - Marketplace manifest and manifest author/repository fields; README install instructions.
 
 ## 0.2.0

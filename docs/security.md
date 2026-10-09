@@ -6,7 +6,7 @@ Claudeium orchestrates agents that run commands; its job is to add few new risks
 
 - `core/` spawns nothing and never executes plan or verify commands. Verify commands run through the host agent's normal tool permissions, so the user's prompts and allow-lists apply. This is deliberate: running them inside a script would bypass per-command approval.
 - `scripts/stop-hook.js` runs `node core/ledger.js stop-status`; `scripts/doctor.js` runs `git --version`. No shell interpolation of user input (arguments passed as arrays).
-- Agents have explicit tool lists (`agents/*.md`). Neither can spawn agents; the verifier has no edit tools. A worker has Bash, so "stay in owned files, never commit/push" is an **instruction, not a sandbox**. Use host permission rules for hard limits.
+- Agents have explicit tool lists (`agents/*.md`). Neither can spawn agents; the verifier has no edit tools. A worker has Bash, so "stay in owned files, never commit/push" is an **instruction, not a sandbox**. Use host permission rules for hard limits. Note that plugin agents cannot set `permissionMode` (Claude Code ignores it for plugin agents), and `tools:` grants whole tools only: command-level limits such as `Bash(git push *)` must be `permissions.deny` rules in your settings or a `PreToolUse` hook, both outside this plugin.
 
 ## Untrusted input
 

@@ -40,7 +40,7 @@ Each check is `{cmd, status, exit?, at, by, note?}`; `note` holds the evidence e
 
 ## Independence
 
-`status` and handoffs mark a `verified` task `not independent` unless every deciding check was recorded with `--by verifier`. This matters in practice: in a headless Claude Code run the verifier agents were denied Bash, recorded `blocked`, and the orchestrator ran the commands itself (`--by orchestrator`). The result is still `verified`, but visibly not independently. Fix by granting the verifier's Bash use in your permission settings.
+`status` and handoffs mark a `verified` task `not independent` unless every deciding check was recorded with `--by verifier`. This matters in practice: in a headless Claude Code run the verifier agents were denied Bash, recorded `blocked`, and the orchestrator ran the commands itself (`--by orchestrator`). The result is still `verified`, but visibly not independently. Why and how to avoid it (from Claude Code's subagent docs; the headless cause is inferred, not confirmed): plugin agents cannot set their own `permissionMode`, so Bash approval comes from the session's permissions. In an interactive session, a background subagent's prompt appears in your main session and you can approve it. A headless `-p` run has no one to answer. Options: allow the verify commands in `permissions.allow` (applies to the whole session, not only the verifier), or run interactively. Either way the ledger will show which it was.
 
 ## Trust limits
 

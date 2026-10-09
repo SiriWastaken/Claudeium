@@ -22,7 +22,7 @@ Check `note` text (evidence excerpts) is deliberately **not** included; it stays
 
 ## State transitions and ownership
 
-A task is owned by whichever agent holds it in `running`. Ownership is exclusive: `start` refuses tasks whose files overlap a running task. A receiving agent resumes by reading the handoff (or the ledger) and continuing with the ledger CLI; `remaining` and `inspectFirst` say where to start.
+A task is owned by whichever agent holds it in `running`. Ownership is exclusive: `start` refuses tasks whose files overlap a running task. A receiving agent resumes with `resume` (below) or by reading the handoff, then continues with the ledger CLI; `remaining` and `inspectFirst` say where to start.
 
 ## Recovery from interrupted work
 
@@ -31,6 +31,10 @@ A task is owned by whichever agent holds it in `running`. Ownership is exclusive
 3. Inspect each such task's owned files for partial edits before restarting; the ledger cannot know what a dead worker changed.
 4. Re-run `status` — verified tasks whose files changed show `STALE`.
 
+## Resuming from a handoff
+
+`node core/ledger.js resume <handoff.json>` validates the file and creates a ledger from it (refuses if an open ledger exists, unless `--force`). Verification does not transfer: the handoff carries no file fingerprint, so a `verified` task comes back as `done` and must be re-verified; `running` tasks come back as `pending`; imported checks are kept as `priorChecks` (history, not evidence). Dependents of an imported `done` task wait until it is re-verified.
+
 ## Not implemented
 
-Importing a handoff into a fresh ledger on another machine; signing handoffs; merging two ledgers. See [roadmap.md](roadmap.md).
+Signing handoffs; merging two ledgers; verifying that the receiving checkout matches the sender's. See [roadmap.md](roadmap.md).

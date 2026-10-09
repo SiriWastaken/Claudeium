@@ -249,6 +249,35 @@ test('handoff: build, markdown render, validate, tamper detection', () => {
   assert.notEqual(p.run('handoff-check', out).status, 0);
 });
 
+test('resume: verification does not transfer; running resets; invalid handoffs and open ledgers refused', () => {
+  const src = project([t('a', ['x']), t('b', ['y'], ['a']), t('c', ['z'])]);
+  src.run('init', 'plan.json');
+  src.run('note', 'db is sqlite');
+  src.run('start', 'a', 'c');
+  src.run('done', 'a', '--summary', 'did a');
+  src.run('verify', 'a', '--by', 'verifier', '--exit', '0', '--evidence', 'ok');
+  const hf = path.join(src.dir, 'h.json');
+  fs.writeFileSync(hf, src.run('handoff').stdout);
+  const dst = project([t('q', ['q'])]);
+  const r = dst.run('resume', hf);
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /re-verify: a/);
+  const l = JSON.parse(dst.run('status', '--json').stdout);
+  const st = Object.fromEntries(l.tasks.map((x) => [x.id, x.status]));
+  assert.deepEqual(st, { a: 'done', b: 'pending', c: 'pending' });
+  assert.deepEqual(l.discoveries, ['db is sqlite']);
+  assert.equal(l.tasks[0].priorChecks.length, 1);
+  assert.deepEqual(l.tasks[0].checks ?? [], [], 'imported evidence is history, not evidence');
+  assert.notEqual(dst.run('resume', hf).status, 0, 'open ledger refused');
+  assert.deepEqual(JSON.parse(dst.run('next').stdout).batch.map((x) => x.id), ['c'], 'b waits on unverified a');
+  const bad = path.join(dst.dir, 'bad.json');
+  fs.writeFileSync(bad, JSON.stringify({ handoffVersion: 7 }));
+  dst.run('close');
+  assert.match(dst.run('resume', bad).stderr, /invalid handoff/);
+  fs.writeFileSync(bad, '{nope');
+  assert.notEqual(dst.run('resume', bad).status, 0);
+});
+
 test('handoff excludes raw check notes (evidence stays in the ledger only)', () => {
   const p = project([t('a', ['x'])]);
   p.run('init', 'plan.json');

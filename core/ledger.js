@@ -181,6 +181,34 @@ const cmds = {
       return `ledger created: ${plan.tasks.length} task(s)`;
     });
   },
+  // Create a ledger from a handoff. Verification does not transfer: the handoff carries no file
+  // fingerprint, so `verified` tasks return as `done` (re-verify) and `running` tasks as `pending`.
+  resume(args) {
+    let h;
+    try { h = JSON.parse(fs.readFileSync(need(args[0], 'usage: resume <handoff.json>'), 'utf8')); } catch (e) { die(`cannot read handoff: ${e.message}`); }
+    const errs = handoff.validate(h);
+    if (errs.length) die(`invalid handoff:\n- ${errs.join('\n- ')}`);
+    validatePlan({ goal: h.objective, tasks: h.tasks.map((t) => ({ id: t.id, title: t.title || t.id, files: t.files, deps: t.deps || [], verify: t.verify })) });
+    return locked(() => {
+      if (open(load()) && !args.includes('--force')) die('an open ledger exists; run `close` first or pass --force');
+      const reverify = [];
+      save({
+        schema: SCHEMA, goal: clean(h.objective), closed: false, createdAt: now(), updatedAt: now(), resumedFrom: h.createdAt,
+        acceptance: strings(h.acceptance, 'acceptance'), constraints: strings(h.constraints, 'constraints'), discoveries: strings(h.discoveries, 'discoveries'),
+        tasks: h.tasks.map((t) => {
+          const status = t.status === 'verified' ? 'done' : t.status === 'running' ? 'pending' : t.status;
+          if (t.status === 'verified') reverify.push(t.id);
+          return {
+            id: t.id, title: clean(t.title), files: t.files, deps: t.deps || [], verify: t.verify, status, attempts: t.attempts || 0,
+            ...(t.summary && { summary: clean(t.summary) }), ...(t.changed && { changed: t.changed.map(clean) }),
+            ...(t.risks && { risks: clean(t.risks) }), ...(t.reason && { reason: clean(t.reason) }),
+            ...(t.checks && t.checks.length && { priorChecks: t.checks }),
+          };
+        }),
+      });
+      return `ledger resumed: ${h.tasks.length} task(s)${reverify.length ? `; re-verify: ${reverify.join(', ')}` : ''}`;
+    });
+  },
   next() { return JSON.stringify(next(load() || die('no ledger')), null, 2); },
   start(args) {
     need(args[0], 'usage: start <id>...');

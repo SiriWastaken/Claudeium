@@ -20,4 +20,5 @@ try {
 // Ponytail's mode lives in its own per-project state; its hooks inject it into subagents. Not read here.
 const ledger = path.join(process.env.CLAUDE_PROJECT_DIR || process.cwd(), '.claudeium', 'ledger.json');
 out.push(`ledger: ${fs.existsSync(ledger) ? 'present' : 'none'}`);
+out.push('verifier permissions: plugin agents cannot set permissionMode; verify commands need Bash approval from your session (interactive prompt, or permissions.allow). Otherwise results are recorded "not independent".');
 console.log(out.join('\n'));

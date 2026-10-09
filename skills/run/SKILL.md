@@ -16,7 +16,7 @@ Use Claudeium's ledger (`node "${CLAUDE_PLUGIN_ROOT}/core/ledger.js"`, below `L`
    - `files`: every path the task may modify (relative; a directory owns everything under it). Two tasks that share a file must not run in parallel, so give them a dep.
    - `verify`: a concrete non-destructive command whose exit code proves the task. No verify command, no task.
 3. **Show the user the plan** (ids, titles, owned files, deps, verify commands) and wait for approval before any edits.
-4. `L init .claudeium/plan.json`. A rejected plan means fix the plan; do not bypass the validator.
+4. `L init .claudeium/plan.json`. (Continuing from a handoff file instead? `L resume <file>`, then re-verify any task it lists, and skip to step 5.) A rejected plan means fix the plan; do not bypass the validator.
 5. **Loop** until `L next` returns an empty batch:
    - `L next` gives startable tasks (deps verified, disjoint files, at most 3). `L start <ids>`.
    - Spawn one `claudeium:worker` per started task (in parallel in a single message when more than one), passing id, title, owned files, verify command, and prior tasks' NOTES. Workers never spawn agents; neither may you recurse.
