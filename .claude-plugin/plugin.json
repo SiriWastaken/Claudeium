@@ -2,6 +2,16 @@
   "name": "claudeium",
   "version": "0.2.0",
   "description": "Plan, delegate, verify: orchestrate multi-step work across scoped subagents with a durable ledger and evidence-gated completion.",
+  "author": {
+    "name": "SiriWastaken",
+    "url": "https://github.com/SiriWastaken"
+  },
+  "homepage": "https://github.com/SiriWastaken/Claudeium",
+  "repository": "https://github.com/SiriWastaken/Claudeium",
   "license": "MIT",
-  "keywords": ["orchestration", "subagents", "verification"]
+  "keywords": [
+    "orchestration",
+    "subagents",
+    "verification"
+  ]
 }

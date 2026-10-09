@@ -3,7 +3,8 @@
 ## Layout
 
 ```
-.claude-plugin/plugin.json      manifest (name, version, description, license)
+.claude-plugin/plugin.json      manifest (name, version, author, license, …)
+.claude-plugin/marketplace.json single-plugin marketplace (source "./") so the repo is installable
 skills/<name>/SKILL.md          /claudeium:<name>  (run, verify: disable-model-invocation)
 commands/<name>.md              /claudeium:<name>  (status, doctor: run a script via !`…`)
 agents/<name>.md                subagents with explicit `tools:` lists

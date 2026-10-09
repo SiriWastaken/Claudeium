@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Marketplace manifest and manifest author/repository fields; README install instructions.
+
 ## 0.2.0
 - Moved logic to platform-independent `core/`; Claude-specific glue in `scripts/`. The ledger CLI moved from `scripts/ledger.js` to `core/ledger.js`.
 - Structured checks with `passed|failed|blocked|not_run`; `check`, `block`, `note`, `recover`, `stale`, `handoff`, `handoff-check` commands; `verify` accepts `--status`.

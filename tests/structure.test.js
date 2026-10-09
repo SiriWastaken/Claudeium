@@ -14,6 +14,16 @@ test('manifest', () => {
   assert.match(m.version, /^\d+\.\d+\.\d+$/);
 });
 
+test('marketplace lists this plugin and matches the manifest', () => {
+  const m = JSON.parse(read('.claude-plugin/plugin.json'));
+  const mk = JSON.parse(read('.claude-plugin/marketplace.json'));
+  assert.equal(mk.plugins.length, 1);
+  assert.equal(mk.plugins[0].name, m.name);
+  assert.equal(mk.plugins[0].source, './');
+  assert.ok(m.author && m.author.name);
+  assert.equal(JSON.parse(read('package.json')).version, m.version, 'package.json and manifest versions must match');
+});
+
 test('agents have scoped tools and none can spawn agents', () => {
   for (const a of ['worker', 'verifier']) {
     const f = frontmatter(`agents/${a}.md`);

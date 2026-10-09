@@ -21,10 +21,15 @@ Delegation and planning themselves are Claude Code's. What is and isn't novel: [
 Requires Claude Code and Node ≥ 18 on PATH.
 
 ```
-claude --plugin-dir /path/to/Claudeium     # load for one session
+/plugin marketplace add SiriWastaken/Claudeium
+/plugin install claudeium@claudeium
 ```
 
-Permanent install needs the repo hosted as a plugin marketplace source (not set up yet).
+(Send the two lines as separate prompts. This works once the repo is pushed to GitHub; until then, or to try local changes:)
+
+```
+claude --plugin-dir /path/to/Claudeium     # load for one session
+```
 
 ## Quick start
 

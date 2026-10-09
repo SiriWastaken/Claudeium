@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claudeium",
+  "description": "Plan, delegate, verify: evidence-gated orchestration for Claude Code.",
+  "owner": { "name": "SiriWastaken", "url": "https://github.com/SiriWastaken" },
+  "plugins": [
+    {
+      "name": "claudeium",
+      "description": "Orchestrate multi-step work across scoped subagents with a durable ledger and evidence-gated completion.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
